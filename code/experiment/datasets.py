@@ -2,6 +2,7 @@ import os
 import pickle
 import numpy as np
 from sklearn.model_selection import train_test_split
+from tensorflow.keras.utils import to_categorical
 
 def load_cifar10(validation_size=10000):
     """
@@ -21,7 +22,8 @@ def load_cifar10(validation_size=10000):
     X_train, y_train = load_images_from_dir(base_path + 'train_images/')
     X_train, X_val, y_train, y_val = train_test_split(X_train, y_train,
         test_size=validation_size, stratify=y_train)
-    return (X_train, y_train), (X_val, y_val), (X_test, y_test)
+    return ((X_train, to_categorical(y_train)), (X_val, to_categorical(y_val)),
+        (X_test, to_categorical(y_test)))
 
 
 def load_images_from_dir(abs_path):
