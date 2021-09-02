@@ -63,7 +63,7 @@ class Experiment():
 
         pbars = [tqdm(position=i, ncols=600,
             bar_format='{desc} {percentage:3.0f}%|{bar}| {n_fmt}/{total_fmt}',
-            desc='Waiting to start') for i in range(n_jobs)]
+            desc='Waiting to start', total=1) for i in range(n_jobs)]
 
         while readers:
             for reader in wait(readers):
@@ -72,12 +72,13 @@ class Experiment():
                 except EOFError:
                     readers.remove(reader)
                 else:
-                    # print(msg)
                     pbar = pbars[msg['pbar_num']]
-                    pbar.reset(total=msg['n_total'])
-                    pbar.set_description(msg['desc'], refresh=False)
-                    pbar.update(msg['n_complete'])
+                    if msg['desc'] != pbar.desc:
+                        pbar.reset(msg['n_total'])
+                        pbar.set_description(msg['desc'])
+                    pbar.update(msg['n_complete'] - pbar.n)
                     pbar.refresh()
+
 
 
 def trial_runner(data, model_func, conn_str, work_queue, write_pipe, pbar_num):
