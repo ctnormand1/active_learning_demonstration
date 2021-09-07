@@ -12,31 +12,32 @@ def main():
     st.markdown(
     """
     This is a demonstration of active learning applied to a convolutional
-    neural network for image classification. Inspiration for this project comes from
-    the book [_Human-in-the-Loop Machine Learning_](
-    https://www.manning.com/books/human-in-the-loop-machine-learning) by Robert
-    Monarch. I would recommend this book to anyone who develops AI solutions, as it
-    provides fascinating perspective on the intersection of humans and machines.
+    neural network for image classification. Data comes from the CIFAR-10
+    dataset, which is commonly used as an introduction to computer vision.
     """
     )
 
     st.header('What is active learning?')
     st.markdown(
     """
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-    nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-    fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-    sunt in culpa qui officia deserunt mollit anim id est laborum.
+    Active learning is a set of techniques that allows models to be trained
+    more efficiently with less data. The benefits of active learning are
+    greatest in cases of supervised learning where large quantities of data
+    need to be labeled by human annotators. As opposed to random sampling,
+    active learning provides a level of selectivity to the data that is labeled
+    and added to the training dataset. This ensures that human annotators are
+    labeling the data that will have the greatest impact on the model and lead
+    to more robust predictions.
     """
     )
 
     st.header("What's the benefit?")
     st.markdown(
     """
-    You can make your models harder, better, faster, and stronger. Look at this
-    chart, for example:
+    In many cases, active learning can allow a model to reach target accuracy
+    with less training data. The following chart shows the effect of an active
+    learning strategy called uncertainty sampling applied to the CIFAR-10
+    dataset.
     """
     )
     st.write(make_plotly_figure())
@@ -47,8 +48,8 @@ def main():
     You absolutely should! Active learning comprises a really useful set of
     techniques, and I only scraped the surface with the time I had to do this
     project. Please check out the GitHub repository to learn more about my
-    methodology. If this project sparked your interest, I'd recommend that you read
-    the book [_Human-in-the-Loop Machine Learning_](
+    methodology. If this project sparked your interest, I'd recommend that you
+    read the book [_Human-in-the-Loop Machine Learning_](
     https://www.manning.com/books/human-in-the-loop-machine-learning) by Robert
     Monarch. This book was the inspiration for this project, and it provides
     fascinating perspective on the intersection of humans and machines.
@@ -100,7 +101,8 @@ def make_plotly_figure():
         else:
             ix_2 = ix_lvl_1[np.where(ix_lvl_1 >= x)[0][0]]
             ix_1 = ix_lvl_1[np.where(ix_lvl_1 >= x)[0][0] - 1]
-            s = grouped.loc[ix_1] + ((x - ix_1) / (ix_2 - ix_1)) * (grouped.loc[ix_2] - grouped.loc[ix_1])
+            s = grouped.loc[ix_1] + (((x - ix_1) / (ix_2 - ix_1)) *
+                (grouped.loc[ix_2] - grouped.loc[ix_1]))
         fig.add_trace(
             go.Scatter(
                 visible=False,
@@ -120,7 +122,7 @@ def make_plotly_figure():
             args=[{"visible": [True] + [False] * len(fig.data)}],
             label=str(i) + '%'  # layout attribute
         )
-        step["args"][0]["visible"][i + 1] = True  # Toggle i'th trace to "visible"
+        step["args"][0]["visible"][i + 1] = True  # Toggle i'th trace to visible
         steps.append(step)
 #
     sliders = [dict(
